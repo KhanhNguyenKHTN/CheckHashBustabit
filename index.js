@@ -12,7 +12,7 @@ router.get('/hash', function (req, res) {
     firstObject.query = 'INSERT INTO BustabitGameInfo (GameId, Hash, CrashPoint) VALUES ( '+ firstObject.index + ', '+ firstObject.hash +', ' + firstObject.crash + ');';
 
     array.push(firstObject);
-    for (let index = 2; index <= 5000; index++) {
+    for (let index = 2; index <= 2000; index++) {
         lastId--;
         hash = lib.genGameHash(hash);
         var tempObject =  { hash: hash, index: lastId, crash: lib.crashPointFromBustabit(hash), query: ""};

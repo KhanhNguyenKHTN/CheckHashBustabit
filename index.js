@@ -5,14 +5,21 @@ const lib = require('./lib');
 
 router.get('/hash', function (req, res) {
     var hash = req.query.hash;
+    var gameId = req.query.gameid;
+    var lastId = parseInt(gameId.toString());
     var array = [];
-    array.push( { hash: hash, index: 1, crash: lib.crashPointFromBustabit(hash) })
-    for (let index = 2; index <= 5000; index++) {
+    var firstObject = { hash: hash, index: lastId, crash: lib.crashPointFromBustabit(hash), query: ""}; 
+    firstObject.query = 'INSERT INTO BustabitGameInfo (GameId, Hash, CrashPoint) VALUES ( '+ firstObject.index + ', '+ firstObject.hash +', ' + firstObject.crash + ');';
 
-        hash = lib.genGameHash(hash)
-        array.push( { hash: hash, index: index, crash: lib.crashPointFromBustabit(hash) })
+    array.push(firstObject);
+    for (let index = 2; index <= 5000; index++) {
+        lastId--;
+        hash = lib.genGameHash(hash);
+        var tempObject =  { hash: hash, index: lastId, crash: lib.crashPointFromBustabit(hash), query: ""};
+        tempObject.query = 'INSERT INTO BustabitGameInfo (GameId, Hash, CrashPoint) VALUES ( '+ tempObject.index + ', '+ tempObject.hash +', ' + tempObject.crash + ');';
+        array.push(tempObject);
     }
-    res.send({list: array});
+    res.send(JSON.stringify(array));
 });
 
 app.use('/', router);
